@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from '../components/Card'
 import { useDispatch, useSelector } from 'react-redux'
 import { getData } from '../getData/getData'
@@ -8,9 +8,11 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
 
 const Home = () => {
     const dispatch = useDispatch()
-    const { doctors } = useSelector(state => state.doctors)
     useEffect(() => { getData(API, dispatch) }, [])
-
+    const { doctors, filteredDoctors, selectedDoctor } = useSelector(state => state.doctors)
+    useEffect(() => { getData(API, dispatch) }, [])
+    console.log(filteredDoctors)
+    const [filterRole, setFilterRole] = useState('Все')
     console.log(doctors)
     return (
         <div className='gray-bg px-[10%] h-[100vh]'>
@@ -21,7 +23,34 @@ const Home = () => {
                     </BreadcrumbItem>
                 </Breadcrumb>
             </div >
-
+            <div className='flex items-center gap-5'>
+                <h1 className='text-[40px]'>Врачи</h1>
+                <select onChange={(e) => (dispatch(filtering(e.target.value)), setFilterRole(e.target.value))} className='rounded-full h-[40px] px-5 max-w-fit'>
+                    <option value="Все">Все</option>
+                    <option value="Инфекционист">Инфекционист</option>
+                    <option value="Офтальмолог">Офтальмолог</option>
+                    <option value="Педиатр">Педиатр</option>
+                    <option value="Онколог">Онколог</option>
+                    <option value="Гинеколог">Гинеколог</option>
+                    <option value="Стоматолог">Стоматолог</option>
+                    <option value="Эндоскопист">Эндоскопист</option>
+                </select>
+            </div>
+            <div className='gray-bg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-10'>
+                {filteredDoctors.length !== 0 && filterRole ? filteredDoctors.map(item => (
+                    <Card key={item.name} item={item} />
+                )) : filteredDoctors.length === 0 && filterRole !== 'Все' ? <div className='h-screen flex text-[20px] gray-text'><p>У нас нет {filterRole}</p></div>
+                    : filterRole === "Все" ? doctors.map(item => (
+                        <Card key={item.name} item={item} />)
+                    ) : doctors.length === 0 & filteredDoctors.length === 0 ?
+                        [0, 1, 2].map(item => (
+                            <CardSkeleton key={item} />
+                        )) : ''
+                }
+            </div>
+            <div className='w-full flex items-center justify-center pb-20'>
+                <button className='primary-bg text-white py-3 px-6 rounded-lg'>Показать еще</button>
+            </div>
         </div>
     )
 }
