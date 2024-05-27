@@ -15,7 +15,7 @@ const Home = () => {
     const [filterRole, setFilterRole] = useState('Все')
     console.log(doctors)
     return (
-        <div className='gray-bg px-[10%] h-[100vh]'>
+        <div className='gray-bg px-[10%]'>
             <div className='py-5'>
                 <Breadcrumb separator={">"}>
                     <BreadcrumbItem>
