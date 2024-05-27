@@ -5,6 +5,7 @@ import { getData } from '../getData/getData'
 import { API } from '../../public/api'
 import CardSkeleton from '../components/CardSkeleton'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
+import { filtering } from '../reducers/doctors.slice'
 
 const Home = () => {
     const dispatch = useDispatch()
@@ -37,7 +38,7 @@ const Home = () => {
                 </select>
             </div>
             <div className='gray-bg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-10'>
-                {filteredDoctors.length !== 0 && filterRole ? filteredDoctors.map(item => (
+                {filteredDoctors.length !== 0 ? filteredDoctors.map(item => (
                     <Card key={item.name} item={item} />
                 )) : filteredDoctors.length === 0 && filterRole !== 'Все' ? <div className='h-screen flex text-[20px] gray-text'><p>У нас нет {filterRole}</p></div>
                     : filterRole === "Все" ? doctors.map(item => (
